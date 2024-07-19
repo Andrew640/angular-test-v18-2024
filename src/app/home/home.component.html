@@ -1,0 +1,74 @@
+<div class="home">
+  @if (isLoading | async) {
+    <fa-icon
+      class="icon icon-loader"
+      [icon]="faSpinner"
+      [animation]="'spin'"
+    ></fa-icon>
+  } @else {
+    @for (client of clientsData | async; track client.id) {
+      <div class="client">
+        <div class="client-header">
+          <span>Client ID: {{ client.id }}</span>
+          <button (click)="openPopup(client)">More</button>
+        </div>
+
+        <app-pie-chart [client]="client"></app-pie-chart>
+        <app-bar-chart [client]="client"></app-bar-chart>
+
+        <div>{{ client.name }}</div>
+        <div>{{ client.firstname }}</div>
+        <div>{{ client.address }}</div>
+        <div>{{ client.created }}</div>
+        <div>{{ client.birthday }}</div>
+      </div>
+    }
+  }
+
+  @if (isPopupOpen && (activeClient | async); as client) {
+    {{ client }}
+    <div class="popup">
+      <div class="popup-header">
+        <span>{{ client.firstname }} {{ client.name }}</span>
+        <fa-icon
+          (click)="closePopup()"
+          class="icon icon-close"
+          [icon]="faClose"
+        ></fa-icon>
+      </div>
+      <div class="popup-content">
+        @if (client.accounts && client.accounts.length > 0) {
+          <div class="table">
+            <div class="table-row table-heading">
+              <div class="table-row-item">Account</div>
+              <div class="table-row-item">Type</div>
+              <div class="table-row-item">Number</div>
+              <div class="table-row-item">Balance</div>
+              <div class="table-row-item">Date of creation</div>
+            </div>
+            @for (
+              account of (activeClient | async)?.accounts;
+              track account.id;
+              let i = $index
+            ) {
+              <div class="table-row">
+                <div class="table-row-item">Account {{ i + 1 }}</div>
+                <div class="table-row-item">{{ account?.card_type }}</div>
+                <div class="table-row-item">{{ account?.number }}</div>
+                <div class="table-row-item">
+                  {{ account?.balance | currency: "£" }}
+                </div>
+                <div class="table-row-item">
+                  {{ account?.created | date: "dd/MM/yyyy" }}
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="no-accounts">No accounts</div>
+        }
+      </div>
+    </div>
+    <div class="overlay" (click)="closePopup()"></div>
+  }
+</div>
