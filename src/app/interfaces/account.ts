@@ -4,4 +4,6 @@ export interface Account {
   number: number;
   balance: number;
   created: string;
+  display: boolean;
+  name: string;
 }

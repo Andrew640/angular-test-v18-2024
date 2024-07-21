@@ -45,8 +45,8 @@ export class PieChartComponent implements OnInit {
     this.chart = new Chart({
       chart: {
         type: 'pie',
-        width: 300,
-        height: 300,
+        width: 240,
+        height: 240,
       },
       title: {
         text: '',
@@ -67,6 +67,9 @@ export class PieChartComponent implements OnInit {
               y: 100 - negativeAccounts,
             },
           ],
+          dataLabels: {
+            enabled: false,
+          },
         },
       ],
     });

@@ -7,7 +7,7 @@ import {
   SimpleChanges,
   input,
 } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, filter, map } from 'rxjs';
 import { ClientsService } from '@app/services/clients.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner, faClose } from '@fortawesome/free-solid-svg-icons';
@@ -15,6 +15,8 @@ import { PopupComponent } from '@app/popup/popup.component';
 import { PieChartComponent } from '@app/pie-chart/pie-chart.component';
 import { ClientWithAccounts } from '@app/interfaces/client-with-accounts';
 import { BarChartComponent } from '@app/bar-chart/bar-chart.component';
+import { UniqueAccountsPipe } from '@app/pipes/unique-accounts.pipe';
+import { Event } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -24,6 +26,7 @@ import { BarChartComponent } from '@app/bar-chart/bar-chart.component';
     PopupComponent,
     PieChartComponent,
     BarChartComponent,
+    UniqueAccountsPipe,
   ],
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -31,8 +34,11 @@ import { BarChartComponent } from '@app/bar-chart/bar-chart.component';
 })
 export class HomeComponent {
   constructor(public clientsService: ClientsService) {
-    this.clientsData = this.clientsService.getClientsWithAccountsData();
-    this.isLoading = this.clientsService.isLoading;
+    this.clientsData = this.clientsService
+      .getClientsWithAccountsData()
+      .pipe(map((clients) => clients.filter((client) => client.display)));
+
+    this.isLoading = this.clientsService.isLoading();
 
     window.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
@@ -60,4 +66,21 @@ export class HomeComponent {
     this.isPopupOpen = false;
     this.activeClient.next(null);
   }
+
+  public filterAccounts(clientId: string, accountId: string): void {
+    console.log('filtering accounts', clientId, accountId);
+    this.clientsService.filterAccounts(clientId, accountId);
+  }
+
+  public searchClients(event: any): void {
+    this.clientsService.searchClients((event.target as HTMLInputElement).value);
+  }
 }
+
+// TODO:
+// - filtering of bar chart
+// - filtering of list by name
+// - click pie chart highlights bar chart / click on bar chart opens popup
+// - styling
+// - split into components
+// - tests

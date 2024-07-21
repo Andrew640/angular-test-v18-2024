@@ -7,5 +7,6 @@ export interface ClientWithAccounts {
   address: string;
   created: string;
   birthday: string;
+  display: boolean;
   accounts: Account[];
 }
