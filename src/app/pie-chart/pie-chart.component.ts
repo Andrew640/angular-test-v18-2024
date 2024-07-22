@@ -1,14 +1,6 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  AfterViewInit,
-  ElementRef,
-  ViewChild,
-  AfterContentInit,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Account } from '@app/interfaces/account';
+import { SelectedPieAccounts } from '@app/interfaces/selected-pie-accounts';
 import { ClientWithAccounts } from '@app/interfaces/client-with-accounts';
 import { Chart } from 'angular-highcharts';
 import { ChartModule } from 'angular-highcharts';
@@ -23,10 +15,15 @@ import Highcharts from 'highcharts/highcharts';
 })
 export class PieChartComponent implements OnInit {
   @Input() public client: ClientWithAccounts = {} as ClientWithAccounts;
+
+  @Output() public selectedPieAccounts: EventEmitter<SelectedPieAccounts> =
+    new EventEmitter();
+
   Highcharts: typeof Highcharts = Highcharts;
 
   public chart: Chart = new Chart();
   public chartId: string = '';
+  public lastClick: string = '';
 
   constructor() {
     this.chartId = this.client.id;
@@ -37,10 +34,16 @@ export class PieChartComponent implements OnInit {
   }
 
   public initializeChart(): void {
-    const negativeAccounts: number =
-      (this.client.accounts.filter((account) => account.balance < 0).length /
-        this.client.accounts.length) *
-      100;
+    const negativeAccounts: Account[] = this.client.accounts.filter(
+      (account) => account.balance < 0,
+    );
+    const zeroPlusAccounts: Account[] = this.client.accounts.filter(
+      (account) => account.balance >= 0,
+    );
+
+    const negativeAccountsPercentage: number =
+      (negativeAccounts.length / this.client.accounts.length) * 100;
+    const zeroPlusAccountsPercentage: number = 100 - negativeAccountsPercentage;
 
     this.chart = new Chart({
       chart: {
@@ -57,14 +60,25 @@ export class PieChartComponent implements OnInit {
       series: [
         {
           type: 'pie',
+          animation: false,
+          point: {
+            events: {
+              click: (event: Highcharts.PointClickEventObject) =>
+                this.handlePieClick(event, negativeAccounts, zeroPlusAccounts),
+            },
+          },
           data: [
             {
               name: 'Negative balance accounts',
-              y: negativeAccounts,
+              y: negativeAccountsPercentage,
+              id: '1',
+              color: '#2caffe',
             },
             {
               name: 'Zero+ balance accounts',
-              y: 100 - negativeAccounts,
+              y: zeroPlusAccountsPercentage,
+              id: '2',
+              color: '#544fc5',
             },
           ],
           dataLabels: {
@@ -73,5 +87,33 @@ export class PieChartComponent implements OnInit {
         },
       ],
     });
+  }
+
+  private handlePieClick(
+    event: Highcharts.PointClickEventObject,
+    negativeAccounts: Account[],
+    zeroPlusAccounts: Account[],
+  ): void {
+    if (event?.point?.options?.id) {
+      const id: string = event.point.options.id;
+      const isSameClick: boolean = this.lastClick === id;
+
+      if (isSameClick) {
+        this.selectedPieAccounts.emit({
+          clientId: this.client.id,
+          type: '',
+          accounts: [],
+        });
+        this.lastClick = '';
+      } else {
+        const accounts = id === '1' ? negativeAccounts : zeroPlusAccounts;
+        this.selectedPieAccounts.emit({
+          clientId: this.client.id,
+          type: id,
+          accounts: accounts,
+        });
+        this.lastClick = id;
+      }
+    }
   }
 }

@@ -43,8 +43,8 @@
             <div class="client-charts">
               <app-pie-chart
                 class="client-charts-pie"
+                (selectedPieAccounts)="selectedPieAccounts($event)"
                 [client]="client"
-                (highlight)="highlightAccount($event)"
               ></app-pie-chart>
               <div class="client-charts-bar">
                 <div class="filters">
@@ -61,7 +61,7 @@
                           [name]="account.card_type"
                           [value]="account.display"
                           (change)="
-                            filterAccounts(client.id, account.card_type)
+                            filterClientAccounts(client.id, account.card_type)
                           "
                           checked
                         />
@@ -70,7 +70,12 @@
                     }
                   </div>
                 </div>
-                <app-bar-chart [client]="client"></app-bar-chart>
+                <app-bar-chart
+                  class="client-charts-bar"
+                  (click)="openPopup(client)"
+                  [highlightedAccounts]="highlightedAccounts"
+                  [client]="client"
+                ></app-bar-chart>
               </div>
             </div>
           } @else {
