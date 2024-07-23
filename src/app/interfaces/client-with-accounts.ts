@@ -1,4 +1,4 @@
-import { Account } from './account';
+import { AccountDisplay } from './account-display';
 
 export interface ClientWithAccounts {
   id: string;
@@ -8,5 +8,5 @@ export interface ClientWithAccounts {
   created: string;
   birthday: string;
   display: boolean;
-  accounts: Account[];
+  accounts: AccountDisplay[];
 }

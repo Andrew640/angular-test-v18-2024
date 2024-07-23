@@ -1,13 +1,13 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Account } from '@app/interfaces/account';
 import { Client } from '@app/interfaces/client';
 import { ClientWithAccounts } from '@app/interfaces/client-with-accounts';
-import { BehaviorSubject, Observable, Subscription, combineLatest } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subscription, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { DataService } from '../data/data.service';
 import { LoadingService } from '../loading/loading.service';
 import { AccountsService } from '../accounts/accounts.service';
+import { AccountDisplay } from '@app/interfaces/account-display';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +23,6 @@ export class ClientsService implements OnDestroy {
       (acc, account) => {
         acc[account.id] = {
           ...account,
-          display: true,
         };
         return acc;
       },
@@ -42,19 +41,23 @@ export class ClientsService implements OnDestroy {
     return this.clientsWithAccountsData;
   }
 
-  public filterClientAccounts(clientId: string, cardType: string): void {
+  public toggleClientAccountsDisplay(clientId: string, cardType: string): void {
     const allClients = this.clientsWithAccountsData.getValue();
-    const updatedClients = allClients.map((client) => {
-      if (client.id === clientId) {
-        const updatedAccounts = client.accounts.map((account) => ({
-          ...account,
-          display:
-            account.card_type === cardType ? !account.display : account.display,
-        }));
-        return { ...client, accounts: updatedAccounts };
-      }
-      return client;
-    });
+    const clientIndex = allClients.findIndex(
+      (client) => client.id === clientId,
+    );
+    if (clientIndex === -1) return;
+
+    const updatedClients = [...allClients];
+    const client = updatedClients[clientIndex];
+    const updatedAccounts = client.accounts.map((account) => ({
+      ...account,
+      display:
+        account.card_type === cardType ? !account.display : account.display,
+    }));
+
+    updatedClients[clientIndex] = { ...client, accounts: updatedAccounts };
+
     this.clientsWithAccountsData.next(updatedClients);
   }
 
@@ -93,11 +96,15 @@ export class ClientsService implements OnDestroy {
     accountMap: { [key: string]: Account },
   ): ClientWithAccounts[] {
     if (client.firstname && client.firstname !== 'TEST CRASH') {
-      const clientAccounts: Account[] = [];
+      const clientAccounts: AccountDisplay[] = [];
       client.accounts.forEach((accountId, i) => {
         const account = accountMap[accountId];
         if (account) {
-          clientAccounts.push({ ...account, name: `Account ${i + 1}` });
+          clientAccounts.push({
+            ...account,
+            display: true,
+            name: `Account ${i + 1}`,
+          });
         }
       });
       result.push({
@@ -113,8 +120,22 @@ export class ClientsService implements OnDestroy {
     this.loadingService.setLoadingClients(true);
     this.clientsDataSubscription = this.dataService
       .getClientsData()
-      .pipe(tap((data) => this.updateClientsWithAccountsData(data)))
-      .subscribe(() => this.loadingService.setLoadingClients(false));
+      .pipe(
+        tap((data) => this.updateClientsWithAccountsData(data)),
+        catchError((error) => {
+          console.error('Error loading client data', error);
+          return of([]);
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.loadingService.setLoadingClients(false);
+        },
+        error: (error) => {
+          this.loadingService.setLoadingClients(false);
+          console.error('Error encountered during subscription', error);
+        },
+      });
   }
 
   public ngOnDestroy(): void {

@@ -5,6 +5,7 @@ import { ClientWithAccounts } from '@app/interfaces/client-with-accounts';
 import { Chart } from 'angular-highcharts';
 import { ChartModule } from 'angular-highcharts';
 import Highcharts from 'highcharts/highcharts';
+import { AccountDisplay } from '@app/interfaces/account-display';
 
 @Component({
   standalone: true,
@@ -34,10 +35,10 @@ export class PieChartComponent implements OnInit {
   }
 
   public initializeChart(): void {
-    const negativeAccounts: Account[] = this.client.accounts.filter(
+    const negativeAccounts: AccountDisplay[] = this.client.accounts.filter(
       (account) => account.balance < 0,
     );
-    const zeroPlusAccounts: Account[] = this.client.accounts.filter(
+    const zeroPlusAccounts: AccountDisplay[] = this.client.accounts.filter(
       (account) => account.balance >= 0,
     );
 
@@ -91,8 +92,8 @@ export class PieChartComponent implements OnInit {
 
   private handlePieClick(
     event: Highcharts.PointClickEventObject,
-    negativeAccounts: Account[],
-    zeroPlusAccounts: Account[],
+    negativeAccounts: AccountDisplay[],
+    zeroPlusAccounts: AccountDisplay[],
   ): void {
     if (event?.point?.options?.id) {
       const id: string = event.point.options.id;

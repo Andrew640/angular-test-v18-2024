@@ -1,13 +1,6 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  input,
-} from '@angular/core';
-import { BehaviorSubject, Observable, filter, map } from 'rxjs';
+import { Component } from '@angular/core';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { ClientsService } from '@app/services/clients/clients.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner, faClose } from '@fortawesome/free-solid-svg-icons';
@@ -16,8 +9,6 @@ import { PieChartComponent } from '@app/pie-chart/pie-chart.component';
 import { ClientWithAccounts } from '@app/interfaces/client-with-accounts';
 import { BarChartComponent } from '@app/bar-chart/bar-chart.component';
 import { UniqueAccountsPipe } from '@app/pipes/unique-accounts.pipe';
-import { Event } from '@angular/router';
-import { Account } from '@app/interfaces/account';
 import { SelectedPieAccounts } from '@app/interfaces/selected-pie-accounts';
 import { LoadingService } from '@app/services/loading/loading.service';
 
@@ -75,8 +66,8 @@ export class HomeComponent {
     this.activeClient.next(null);
   }
 
-  public filterClientAccounts(clientId: string, accountId: string): void {
-    this.clientsService.filterClientAccounts(clientId, accountId);
+  public toggleClientAccountsDisplay(clientId: string, cardType: string): void {
+    this.clientsService.toggleClientAccountsDisplay(clientId, cardType);
   }
 
   public searchClients(event: any): void {
@@ -90,5 +81,6 @@ export class HomeComponent {
 
 // TODO:
 // - styling
-// - split into components
+// - split home into client component and popup component
 // - tests
+// - cleanup

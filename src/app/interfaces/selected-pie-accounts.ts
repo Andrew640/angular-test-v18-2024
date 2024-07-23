@@ -1,7 +1,7 @@
-import { Account } from './account';
+import { AccountDisplay } from './account-display';
 
 export interface SelectedPieAccounts {
   clientId: string;
   type: string;
-  accounts: Account[];
+  accounts: AccountDisplay[];
 }

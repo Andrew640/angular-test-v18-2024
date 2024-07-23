@@ -1,6 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Account } from '@app/interfaces/account';
-import { BehaviorSubject, Observable, Subscription, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  Subscription,
+  catchError,
+  of,
+  tap,
+} from 'rxjs';
 import { DataService } from '../data/data.service';
 import { LoadingService } from '../loading/loading.service';
 
@@ -28,8 +35,22 @@ export class AccountsService implements OnDestroy {
     this.loadingService.setLoadingAccounts(true);
     this.accountsDataSubscription = this.dataService
       .getAccountsData()
-      .pipe(tap((data) => this.accounts.next(data)))
-      .subscribe(() => this.loadingService.setLoadingAccounts(false));
+      .pipe(
+        tap((data) => this.accounts.next(data)),
+        catchError((error) => {
+          console.error('Error loading account data', error);
+          return of([]);
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.loadingService.setLoadingAccounts(false);
+        },
+        error: (error) => {
+          this.loadingService.setLoadingAccounts(false);
+          console.error('Error encountered during subscription', error);
+        },
+      });
   }
 
   public ngOnDestroy(): void {

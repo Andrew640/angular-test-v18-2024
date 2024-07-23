@@ -1,9 +1,4 @@
 // Colours
-// $background-color: #1b1d28;
-// $background-color-light: #202231;
-
-// $primary: #2d3045;
-// $secondary: #26293a;
 $background-color: #e6ebf4;
 $background-color-light: #fff;
 $overlay: rgba(0, 0, 0, 0.5);
@@ -15,6 +10,11 @@ $border: #e1e3ec;
 
 $font-color: #181a25;
 $font-color-light: #707384;
+
+$error: #ff4d4f;
+$error-light: rgba(255, 77, 80, 0.5);
+$success: #52c41a;
+$warning: #faad14;
 
 // Fonts
 $font-family: "Be Vietnam Pro", sans-serif;

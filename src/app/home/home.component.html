@@ -6,83 +6,90 @@
       [animation]="'spin'"
     ></fa-icon>
   } @else {
-    <div class="home-header">
-      <!-- search bar for filtering the clients by firstname -->
-      <input
-        type="text"
-        class="search"
-        placeholder="Search by firstname"
-        (input)="searchClients($event)"
-      />
-    </div>
-
-    @for (client of clientsData | async; track client.id) {
-      <div class="client">
-        <div class="client-header">
-          <span>Client ID: {{ client.id }}</span>
-          <button (click)="openPopup(client)">All accounts</button>
-        </div>
-
-        <div class="client-content">
-          <div class="client-info">
-            <div class="client-info-title">Date of birth</div>
-            <div>
-              <!-- TODO: move logic to component -->
-              {{
-                client.birthday !== "None"
-                  ? (client.birthday | date: "dd/MM/yyyy")
-                  : "None"
-              }}
-            </div>
-            <div class="client-info-title">First name</div>
-            <div>{{ client.firstname }}</div>
-            <div class="client-info-title">Surname</div>
-            <div>{{ client.name }}</div>
-          </div>
-          @if (client.accounts.length > 0) {
-            <div class="client-charts">
-              <app-pie-chart
-                class="client-charts-pie"
-                (selectedPieAccounts)="selectedPieAccounts($event)"
-                [client]="client"
-              ></app-pie-chart>
-              <div class="client-charts-bar">
-                <div class="filters">
-                  <div class="filters-title">Filter account type</div>
-                  <div class="filters-container">
-                    @for (
-                      account of client.accounts | uniqueAccounts;
-                      track account.id
-                    ) {
-                      <div class="filters-checkboxes">
-                        <input
-                          type="checkbox"
-                          [id]="account.id"
-                          [name]="account.card_type"
-                          [value]="account.display"
-                          (change)="
-                            filterClientAccounts(client.id, account.card_type)
-                          "
-                          checked
-                        />
-                        <label for="current">{{ account.card_type }}</label>
-                      </div>
-                    }
-                  </div>
-                </div>
-                <app-bar-chart
-                  class="client-charts-bar"
-                  (click)="openPopup(client)"
-                  [highlightedAccounts]="highlightedAccounts"
-                  [client]="client"
-                ></app-bar-chart>
-              </div>
-            </div>
-          } @else {
-            <div class="no-accounts">No accounts</div>
-          }
-        </div>
+    @if (!(clientsData | async) || (clientsData | async)?.length === 0) {
+      <div class="no-clients">No clients to display</div>
+    } @else {
+      <div class="home-header">
+        <!-- search bar for filtering the clients by firstname -->
+        <input
+          type="text"
+          class="search"
+          placeholder="Search by firstname"
+          (input)="searchClients($event)"
+        />
       </div>
+
+      @for (client of clientsData | async; track client.id) {
+        <div class="client">
+          <div class="client-header">
+            <span>Client ID: {{ client.id }}</span>
+            <button (click)="openPopup(client)">All accounts</button>
+          </div>
+
+          <div class="client-content">
+            <div class="client-info">
+              <div class="client-info-title">Date of birth</div>
+              <div>
+                <!-- TODO: move logic to component -->
+                {{
+                  client.birthday !== "None"
+                    ? (client.birthday | date: "dd/MM/yyyy")
+                    : "None"
+                }}
+              </div>
+              <div class="client-info-title">First name</div>
+              <div>{{ client.firstname }}</div>
+              <div class="client-info-title">Surname</div>
+              <div>{{ client.name }}</div>
+            </div>
+            @if (client.accounts.length > 0) {
+              <div class="client-charts">
+                <app-pie-chart
+                  class="client-charts-pie"
+                  (selectedPieAccounts)="selectedPieAccounts($event)"
+                  [client]="client"
+                ></app-pie-chart>
+                <div class="client-charts-bar">
+                  <div class="filters">
+                    <div class="filters-title">Filter account type</div>
+                    <div class="filters-container">
+                      @for (
+                        account of client.accounts | uniqueAccounts;
+                        track account.id
+                      ) {
+                        <div class="filters-checkboxes">
+                          <input
+                            type="checkbox"
+                            [id]="account.id"
+                            [name]="account.card_type"
+                            [value]="account.display"
+                            (change)="
+                              toggleClientAccountsDisplay(
+                                client.id,
+                                account.card_type
+                              )
+                            "
+                            checked
+                          />
+                          <label for="current">{{ account.card_type }}</label>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                  <app-bar-chart
+                    class="client-charts-bar"
+                    (click)="openPopup(client)"
+                    [highlightedAccounts]="highlightedAccounts"
+                    [client]="client"
+                  ></app-bar-chart>
+                </div>
+              </div>
+            } @else {
+              <div class="no-accounts">No accounts</div>
+            }
+          </div>
+        </div>
+      }
     }
   }
 

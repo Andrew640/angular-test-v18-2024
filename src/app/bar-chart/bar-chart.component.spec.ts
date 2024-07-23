@@ -6,9 +6,9 @@ describe('BarChartComponent', () => {
   let component: BarChartComponent;
   let fixture: ComponentFixture<BarChartComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [BarChartComponent],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [BarChartComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BarChartComponent);

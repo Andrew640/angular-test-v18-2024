@@ -60,8 +60,6 @@ export class BarChartComponent {
           ?.map((account) => account.id)
           .includes(account.id);
 
-        console.log(isHighlighted);
-
         const color = this.getColor(
           isHighlighted,
           this.highlightedAccounts.type,
