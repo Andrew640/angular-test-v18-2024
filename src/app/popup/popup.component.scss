@@ -1,0 +1,107 @@
+@import "../../styles/variables.scss";
+
+.popup {
+  color: $font-color;
+  left: 0;
+  margin: auto;
+  position: fixed;
+  right: 0;
+  top: 10vh;
+  max-width: 700px;
+  max-height: 500px;
+  min-height: 200px;
+  padding: 20px;
+  background-color: $background-color-light;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+  border-radius: 8px;
+  border: 1px solid $border;
+
+  &-header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &-content {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  .icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 34px;
+    &-close {
+      cursor: pointer;
+    }
+  }
+
+  &-overlay {
+    background-color: $overlay;
+    opacity: 0.9;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+  }
+
+  .no-accounts {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: 16px;
+    margin-top: 40px;
+  }
+
+  .table {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 90%;
+    margin: 0 auto;
+    border-radius: 8px;
+    outline: 1px solid $border;
+
+    &-row {
+      display: flex;
+      flex-flow: row nowrap;
+      width: 100%;
+      background-color: $primary;
+      border-bottom: 1px solid $border;
+
+      &:last-child {
+        border-bottom-right-radius: 8px;
+        border-bottom-left-radius: 8px;
+        border-bottom: none;
+      }
+
+      &-item {
+        display: flex;
+        flex: 1;
+        font-size: 14px;
+        padding: 8px 0;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.15s ease-in-out;
+      }
+    }
+
+    &-heading {
+      background-color: $secondary;
+      font-weight: bold;
+      border-top-right-radius: 6px;
+      border-top-left-radius: 6px;
+    }
+  }
+}

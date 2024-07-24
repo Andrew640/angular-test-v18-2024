@@ -5,6 +5,8 @@ import { ClientWithAccounts } from '@app/interfaces/client-with-accounts';
 import { Chart } from 'angular-highcharts';
 import { ChartModule } from 'angular-highcharts';
 import Highcharts from 'highcharts/highcharts';
+import { ACCOUNT_TYPE_COLOR } from '@app/interfaces/account-type-color';
+import { ACCOUNT_TYPE_ID } from '@app/interfaces/account-type-id';
 
 @Component({
   standalone: true,
@@ -62,7 +64,9 @@ export class BarChartComponent {
 
         const color = this.getColor(
           isHighlighted,
-          this.highlightedAccounts.type,
+          this.highlightedAccounts && this.highlightedAccounts.type
+            ? this.highlightedAccounts.type
+            : ACCOUNT_TYPE_ID.DEFAULT,
         );
 
         return {
@@ -76,8 +80,8 @@ export class BarChartComponent {
     this.chart = new Chart({
       chart: {
         type: 'column',
-        width: 240,
-        height: 240,
+        width: 260,
+        height: 260,
       },
       title: {
         text: '',
@@ -114,11 +118,11 @@ export class BarChartComponent {
 
   private getColor(isHighlighted: boolean, type: string): string {
     if (!isHighlighted) {
-      return '#707384';
-    } else if (type === '1') {
-      return '#2caffe';
+      return ACCOUNT_TYPE_COLOR.DEFAULT;
+    } else if (type === ACCOUNT_TYPE_ID.NEGATIVE) {
+      return ACCOUNT_TYPE_COLOR.NEGATIVE;
     } else {
-      return '#544fc5';
+      return ACCOUNT_TYPE_COLOR.ZERO_PLUS;
     }
   }
 }

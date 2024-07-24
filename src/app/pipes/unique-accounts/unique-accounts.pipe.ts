@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Account } from '@app/interfaces/account';
 import { AccountDisplay } from '@app/interfaces/account-display';
 
 @Pipe({
@@ -8,6 +7,9 @@ import { AccountDisplay } from '@app/interfaces/account-display';
 })
 export class UniqueAccountsPipe implements PipeTransform {
   transform(accounts: AccountDisplay[]): AccountDisplay[] {
+    if (!accounts || accounts.length === 0) {
+      return [];
+    }
     // Remove duplicate accounts by card_type
     return accounts.filter(
       (account, index) =>

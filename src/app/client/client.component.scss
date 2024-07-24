@@ -1,0 +1,111 @@
+@import "../../styles/variables.scss";
+
+.client {
+  display: flex;
+  flex-direction: column;
+  background-color: $background-color-light;
+  padding: $spacing-medium;
+  margin: 0 $spacing-medium $spacing-medium;
+  border-radius: 8px;
+  color: $font-color;
+  border: 1px solid $border;
+  min-height: 360px;
+
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+
+    span {
+      font-weight: 400;
+    }
+
+    button {
+      background-color: $primary;
+      color: $font-color;
+      border: 1px solid $border;
+      border-radius: 4px;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+
+      &:hover {
+        background-color: $secondary;
+      }
+    }
+  }
+
+  &-content {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    justify-content: space-between;
+  }
+
+  &-charts {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: 20px;
+    justify-content: center;
+
+    &-pie {
+      margin-right: 30px;
+    }
+
+    &-bar {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
+
+  &-info {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+    font-size: 17px;
+
+    &-title {
+      display: flex;
+      margin-top: 14px;
+      margin-bottom: 2px;
+      font-size: 14px;
+    }
+  }
+
+  .filters {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    justify-content: space-between;
+
+    &-title {
+      display: flex;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    &-container {
+      display: flex;
+    }
+
+    &-checkboxes {
+      display: flex;
+      margin-right: 10px;
+      font-size: 14px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .no-accounts {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    margin: 120px auto;
+  }
+}

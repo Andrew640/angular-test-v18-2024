@@ -1,7 +1,39 @@
 <div class="popup">
-  <div>{{ account?.id }}</div>
-  <div>{{ account?.card_type }}</div>
-  <div>{{ account?.number }}</div>
-  <div>{{ account?.balance }}</div>
-  <div>{{ account?.created }}</div>
+  <div class="popup-header">
+    <span>{{ client.firstname }} {{ client.name }}</span>
+    <fa-icon
+      (click)="closePopup()"
+      class="icon icon-close"
+      [icon]="faClose"
+    ></fa-icon>
+  </div>
+  <div class="popup-content">
+    @if (client.accounts && client.accounts.length > 0) {
+      <div class="table">
+        <div class="table-row table-heading">
+          <div class="table-row-item">Account</div>
+          <div class="table-row-item">Type</div>
+          <div class="table-row-item">Number</div>
+          <div class="table-row-item">Balance</div>
+          <div class="table-row-item">Date of creation</div>
+        </div>
+        @for (account of client.accounts; track account.id; let i = $index) {
+          <div class="table-row">
+            <div class="table-row-item">{{ account?.name }}</div>
+            <div class="table-row-item">{{ account?.card_type }}</div>
+            <div class="table-row-item">{{ account?.number }}</div>
+            <div class="table-row-item">
+              {{ account?.balance | currency: "£" }}
+            </div>
+            <div class="table-row-item">
+              {{ account?.created | date: "dd/MM/yyyy" }}
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="no-accounts">No accounts</div>
+    }
+  </div>
 </div>
+<div class="popup-overlay" (click)="closePopup()"></div>

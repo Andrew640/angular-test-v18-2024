@@ -1,16 +1,17 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { ClientsService } from '@app/services/clients/clients.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faSpinner, faClose } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { PopupComponent } from '@app/popup/popup.component';
 import { PieChartComponent } from '@app/pie-chart/pie-chart.component';
 import { ClientWithAccounts } from '@app/interfaces/client-with-accounts';
 import { BarChartComponent } from '@app/bar-chart/bar-chart.component';
-import { UniqueAccountsPipe } from '@app/pipes/unique-accounts.pipe';
-import { SelectedPieAccounts } from '@app/interfaces/selected-pie-accounts';
+import { UniqueAccountsPipe } from '@app/pipes/unique-accounts/unique-accounts.pipe';
 import { LoadingService } from '@app/services/loading/loading.service';
+import { ProcessBirthdayPipe } from '@app/pipes/process-birthday/process-birthday.pipe';
+import { ClientComponent } from '@app/client/client.component';
 
 @Component({
   standalone: true,
@@ -21,7 +22,11 @@ import { LoadingService } from '@app/services/loading/loading.service';
     PieChartComponent,
     BarChartComponent,
     UniqueAccountsPipe,
+    ProcessBirthdayPipe,
+    ClientComponent,
+    PopupComponent,
   ],
+  providers: [DatePipe],
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
@@ -31,12 +36,27 @@ export class HomeComponent {
     public clientsService: ClientsService,
     public loadingService: LoadingService,
   ) {
-    this.clientsData = this.clientsService
-      .getClientsWithAccountsData()
-      .pipe(map((clients) => clients.filter((client) => client.display)));
+    this.clientsData = this.clientsService.getClientsWithAccountsData();
+
+    this.clientsDataDisplay = this.clientsData.pipe(
+      map((clients) => clients.filter((client) => client.display)),
+    );
 
     this.isLoading = this.loadingService.isLoading();
+    this.monitorEscClicks();
+  }
 
+  public clientsData: Observable<ClientWithAccounts[]>;
+  public clientsDataDisplay: Observable<ClientWithAccounts[]>;
+  public isLoading: Observable<boolean>;
+  public activeClient: BehaviorSubject<ClientWithAccounts | null> =
+    new BehaviorSubject<ClientWithAccounts | null>(null);
+
+  public faSpinner = faSpinner;
+
+  public isPopupOpen: boolean = false;
+
+  private monitorEscClicks(): void {
     window.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
         this.closePopup();
@@ -44,20 +64,8 @@ export class HomeComponent {
     });
   }
 
-  public clientsData: Observable<ClientWithAccounts[]>;
-  public isLoading: Observable<boolean>;
-  public activeClient: BehaviorSubject<ClientWithAccounts | null> =
-    new BehaviorSubject<ClientWithAccounts | null>(null);
-
-  public faSpinner = faSpinner;
-  public faClose = faClose;
-
-  public isPopupOpen: boolean = false;
-
-  public highlightedAccounts: SelectedPieAccounts = {} as SelectedPieAccounts;
-
-  public openPopup(client: ClientWithAccounts): void {
-    this.activeClient.next(client);
+  public openPopup(event: ClientWithAccounts): void {
+    this.activeClient.next(event);
     this.isPopupOpen = true;
   }
 
@@ -66,21 +74,11 @@ export class HomeComponent {
     this.activeClient.next(null);
   }
 
-  public toggleClientAccountsDisplay(clientId: string, cardType: string): void {
-    this.clientsService.toggleClientAccountsDisplay(clientId, cardType);
-  }
-
   public searchClients(event: any): void {
     this.clientsService.searchClients((event.target as HTMLInputElement).value);
-  }
-
-  public selectedPieAccounts(selectedPieAccounts: SelectedPieAccounts): void {
-    this.highlightedAccounts = selectedPieAccounts;
   }
 }
 
 // TODO:
 // - styling
-// - split home into client component and popup component
-// - tests
 // - cleanup

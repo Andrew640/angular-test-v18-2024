@@ -6,6 +6,9 @@ import { Chart } from 'angular-highcharts';
 import { ChartModule } from 'angular-highcharts';
 import Highcharts from 'highcharts/highcharts';
 import { AccountDisplay } from '@app/interfaces/account-display';
+import { ACCOUNT_TYPE_ID } from '@app/interfaces/account-type-id';
+import { ACCOUNT_TYPE_NAME } from '@app/interfaces/account-type-name';
+import { ACCOUNT_TYPE_COLOR } from '@app/interfaces/account-type-color';
 
 @Component({
   standalone: true,
@@ -70,16 +73,16 @@ export class PieChartComponent implements OnInit {
           },
           data: [
             {
-              name: 'Negative balance accounts',
+              name: ACCOUNT_TYPE_NAME.NEGATIVE,
               y: negativeAccountsPercentage,
-              id: '1',
-              color: '#2caffe',
+              id: ACCOUNT_TYPE_ID.NEGATIVE,
+              color: ACCOUNT_TYPE_COLOR.NEGATIVE,
             },
             {
-              name: 'Zero+ balance accounts',
+              name: ACCOUNT_TYPE_NAME.ZERO_PLUS,
               y: zeroPlusAccountsPercentage,
-              id: '2',
-              color: '#544fc5',
+              id: ACCOUNT_TYPE_ID.ZERO_PLUS,
+              color: ACCOUNT_TYPE_COLOR.ZERO_PLUS,
             },
           ],
           dataLabels: {
@@ -107,7 +110,8 @@ export class PieChartComponent implements OnInit {
         });
         this.lastClick = '';
       } else {
-        const accounts = id === '1' ? negativeAccounts : zeroPlusAccounts;
+        const accounts =
+          id === ACCOUNT_TYPE_ID.NEGATIVE ? negativeAccounts : zeroPlusAccounts;
         this.selectedPieAccounts.emit({
           clientId: this.client.id,
           type: id,

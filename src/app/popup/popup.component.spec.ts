@@ -7,10 +7,9 @@ describe('PopupComponent', () => {
   let fixture: ComponentFixture<PopupComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [PopupComponent]
-    })
-    .compileComponents();
+    TestBed.configureTestingModule({
+      imports: [PopupComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PopupComponent);
     component = fixture.componentInstance;
@@ -19,5 +18,11 @@ describe('PopupComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should close popup', () => {
+    spyOn(component.closePopupClick, 'emit');
+    component.closePopup();
+    expect(component.closePopupClick.emit).toHaveBeenCalled();
   });
 });
