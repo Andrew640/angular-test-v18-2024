@@ -82,4 +82,3 @@ export class HomeComponent {
 // TODO:
 // - styling
 // - cleanup
-// - final check tests
