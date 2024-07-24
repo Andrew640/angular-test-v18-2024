@@ -45,8 +45,9 @@ export class PieChartComponent implements OnInit {
       (account) => account.balance >= 0,
     );
 
-    const negativeAccountsPercentage: number =
-      (negativeAccounts.length / this.client.accounts.length) * 100;
+    const negativeAccountsPercentage: number = Math.floor(
+      (negativeAccounts.length / this.client.accounts.length) * 100,
+    );
     const zeroPlusAccountsPercentage: number = 100 - negativeAccountsPercentage;
 
     this.chart = new Chart({
@@ -90,6 +91,9 @@ export class PieChartComponent implements OnInit {
           },
         },
       ],
+      tooltip: {
+        pointFormat: '<b>{point.y}%</b>',
+      },
     });
   }
 

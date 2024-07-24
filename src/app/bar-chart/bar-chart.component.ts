@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Account } from '@app/interfaces/account';
 import { SelectedPieAccounts } from '@app/interfaces/selected-pie-accounts';
 import { ClientWithAccounts } from '@app/interfaces/client-with-accounts';
 import { Chart } from 'angular-highcharts';
@@ -7,6 +6,9 @@ import { ChartModule } from 'angular-highcharts';
 import Highcharts from 'highcharts/highcharts';
 import { ACCOUNT_TYPE_COLOR } from '@app/interfaces/account-type-color';
 import { ACCOUNT_TYPE_ID } from '@app/interfaces/account-type-id';
+import NoDataToDisplay from 'highcharts/modules/no-data-to-display';
+
+NoDataToDisplay(Highcharts);
 
 @Component({
   standalone: true,
@@ -80,7 +82,7 @@ export class BarChartComponent {
     this.chart = new Chart({
       chart: {
         type: 'column',
-        width: 280,
+        width: 320,
         height: 260,
       },
       title: {
@@ -112,6 +114,16 @@ export class BarChartComponent {
       },
       legend: {
         enabled: false,
+      },
+      lang: {
+        noData: 'Please select an account type',
+      },
+      noData: {
+        style: {
+          fontWeight: 'bold',
+          fontSize: '15px',
+          color: '#303030',
+        },
       },
     });
   }
