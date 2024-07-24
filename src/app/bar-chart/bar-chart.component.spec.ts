@@ -39,7 +39,7 @@ describe('BarChartComponent', () => {
         const chartOptions = chart.options;
 
         expect(chartOptions.chart?.type).toEqual('column');
-        expect(chartOptions.chart?.width).toEqual(260);
+        expect(chartOptions.chart?.width).toEqual(280);
         expect(chartOptions.chart?.height).toEqual(260);
 
         const series = chartOptions.series && chartOptions.series[0];

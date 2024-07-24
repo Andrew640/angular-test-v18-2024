@@ -80,7 +80,7 @@ export class BarChartComponent {
     this.chart = new Chart({
       chart: {
         type: 'column',
-        width: 260,
+        width: 280,
         height: 260,
       },
       title: {
