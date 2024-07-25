@@ -20,7 +20,7 @@ export class DataService {
 
   public getClientsData(): Observable<Client[]> {
     return this.http
-      .get<Client[]>(`${this.apiUrl}/clientsrefgt`)
+      .get<Client[]>(`${this.apiUrl}/clients`)
       .pipe(catchError(this.handleError));
   }
 
