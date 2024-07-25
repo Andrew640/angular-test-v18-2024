@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { DataService } from '../data/data.service';
-import { provideHttpClient } from '@angular/common/http';
+import { HttpErrorResponse, provideHttpClient } from '@angular/common/http';
 
 describe('DataService', () => {
   let service: DataService;
@@ -19,5 +19,29 @@ describe('DataService', () => {
 
   it('should have apiUrl defined', () => {
     expect(service['apiUrl']).toBeDefined();
+  });
+
+  describe('handleError', () => {
+    it('should return an error message if error is an instance of ErrorEvent', () => {
+      const error = {
+        status: 404,
+        message: 'Not Found',
+        error: new ErrorEvent('Not Found', {
+          message: 'Not Found',
+        }),
+      };
+      const result = service['handleError'](error as HttpErrorResponse);
+      expect(result).toBeDefined();
+    });
+
+    it('should return an error message if error is not an instance of ErrorEvent', () => {
+      const error = {
+        status: 404,
+        message: 'Not Found',
+        error: new Error('Not Found'),
+      };
+      const result = service['handleError'](error as HttpErrorResponse);
+      expect(result).toBeDefined();
+    });
   });
 });

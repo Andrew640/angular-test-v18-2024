@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BarChartComponent } from './bar-chart.component';
 import { clientsWithAccountsMock } from '@app/mocks/clients-with-accounts';
-import { ClientWithAccounts } from '@app/interfaces/client-with-accounts';
 import { ACCOUNT_TYPE_COLOR } from '@app/interfaces/account-type-color';
 import { ACCOUNT_TYPE_ID } from '@app/interfaces/account-type-id';
 
@@ -39,7 +38,7 @@ describe('BarChartComponent', () => {
         const chartOptions = chart.options;
 
         expect(chartOptions.chart?.type).toEqual('column');
-        expect(chartOptions.chart?.width).toEqual(320);
+        expect(chartOptions.chart?.width).toEqual(280);
         expect(chartOptions.chart?.height).toEqual(260);
 
         const series = chartOptions.series && chartOptions.series[0];

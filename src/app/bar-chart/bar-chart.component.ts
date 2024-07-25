@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { SelectedPieAccounts } from '@app/interfaces/selected-pie-accounts';
 import { ClientWithAccounts } from '@app/interfaces/client-with-accounts';
 import { Chart } from 'angular-highcharts';
@@ -82,7 +82,7 @@ export class BarChartComponent {
     this.chart = new Chart({
       chart: {
         type: 'column',
-        width: 320,
+        width: 280,
         height: 260,
       },
       title: {
@@ -120,9 +120,9 @@ export class BarChartComponent {
       },
       noData: {
         style: {
-          fontWeight: 'bold',
+          fontWeight: 'normal',
           fontSize: '15px',
-          color: '#303030',
+          color: '#181a25',
         },
       },
     });

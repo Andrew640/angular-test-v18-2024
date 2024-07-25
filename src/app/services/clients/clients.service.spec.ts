@@ -10,7 +10,6 @@ import { LoadingService } from '../loading/loading.service';
 import { clientsWithAccountsMock } from '@app/mocks/clients-with-accounts';
 import { accountsMock } from '@app/mocks/accounts';
 import { clientsMock } from '@app/mocks/clients';
-import { AccountDisplay } from '@app/interfaces/account-display';
 import { accountsDisplayMock } from '@app/mocks/accounts-display';
 
 describe('ClientsService', () => {

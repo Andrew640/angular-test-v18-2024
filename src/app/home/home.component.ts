@@ -78,7 +78,3 @@ export class HomeComponent {
     this.clientsService.searchClients((event.target as HTMLInputElement).value);
   }
 }
-
-// TODO:
-// - styling
-// - cleanup

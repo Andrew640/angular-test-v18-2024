@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Account } from '@app/interfaces/account';
 import { SelectedPieAccounts } from '@app/interfaces/selected-pie-accounts';
 import { ClientWithAccounts } from '@app/interfaces/client-with-accounts';
 import { Chart } from 'angular-highcharts';

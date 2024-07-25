@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { AccountsService } from './accounts.service';
 import { provideHttpClient } from '@angular/common/http';
-import { BehaviorSubject, of, throwError } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { DataService } from '../data/data.service';
 import { LoadingService } from '../loading/loading.service';
 import { Account } from '@app/interfaces/account';

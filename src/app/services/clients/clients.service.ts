@@ -124,18 +124,11 @@ export class ClientsService implements OnDestroy {
         tap((data) => this.updateClientsWithAccountsData(data)),
         catchError((error) => {
           console.error('Error loading client data', error);
+          this.loadingService.setLoadingClients(false);
           return of([]);
         }),
       )
-      .subscribe({
-        next: () => {
-          this.loadingService.setLoadingClients(false);
-        },
-        error: (error) => {
-          this.loadingService.setLoadingClients(false);
-          console.error('Error encountered during subscription', error);
-        },
-      });
+      .subscribe(() => this.loadingService.setLoadingClients(false));
   }
 
   public ngOnDestroy(): void {
